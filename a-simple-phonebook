@@ -1,0 +1,170 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_CONTACTS 100
+#define MAX_NAME_LENGTH 50
+#define MAX_PHONE_LENGTH 15
+
+typedef struct {
+    char name[MAX_NAME_LENGTH];
+    char phone[MAX_PHONE_LENGTH];
+} Contact;
+
+Contact phonebook[MAX_CONTACTS];
+int numContacts = 0;
+
+void displayMenu() {
+    printf("\nPhonebook Application\n");
+    printf("1. Add Contact\n");
+    printf("2. Edit Contact\n");
+    printf("3. Delete Contact\n");
+    printf("4. Search Contact\n");
+    printf("5. Display All Contacts\n");
+    printf("6. Exit\n");
+    printf("Enter your choice: ");
+}
+
+void addContact() {
+    if (numContacts == MAX_CONTACTS) {
+        printf("Phonebook is full. Cannot add more contacts.\n");
+        return;
+    }
+
+    Contact newContact;
+    printf("Enter contact name: ");
+    scanf(" %[^\n]s", newContact.name);
+    printf("Enter contact phone number: ");
+    scanf(" %[^\n]s", newContact.phone);
+
+    phonebook[numContacts++] = newContact;
+    printf("Contact added successfully.\n");
+}
+
+void editContact() {
+    if (numContacts == 0) {
+        printf("Phonebook is empty. No contacts to edit.\n");
+        return;
+    }
+
+    char searchName[MAX_NAME_LENGTH];
+    printf("Enter the name of the contact to edit: ");
+    scanf(" %[^\n]s", searchName);
+
+    int found = 0;
+    for (int i = 0; i < numContacts; i++) {
+        if (strcmp(searchName, phonebook[i].name) == 0) {
+            printf("Enter the updated phone number: ");
+            scanf(" %[^\n]s", phonebook[i].phone);
+            printf("Contact edited successfully.\n");
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Contact not found.\n");
+    }
+}
+
+void deleteContact() {
+    if (numContacts == 0) {
+        printf("Phonebook is empty. No contacts to delete.\n");
+        return;
+    }
+
+    char searchName[MAX_NAME_LENGTH];
+    printf("Enter the name of the contact to delete: ");
+    scanf(" %[^\n]s", searchName);
+
+    int found = 0;
+    for (int i = 0; i < numContacts; i++) {
+        if (strcmp(searchName, phonebook[i].name) == 0) {
+            for (int j = i; j < numContacts - 1; j++) {
+                phonebook[j] = phonebook[j + 1];
+            }
+            numContacts--;
+            printf("Contact deleted successfully.\n");
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Contact not found.\n");
+    }
+}
+
+void searchContact() {
+    if (numContacts == 0) {
+        printf("Phonebook is empty. No contacts to search.\n");
+        return;
+    }
+
+    char searchName[MAX_NAME_LENGTH];
+    printf("Enter the name of the contact to search: ");
+    scanf(" %[^\n]s", searchName);
+
+    int found = 0;
+    for (int i = 0; i < numContacts; i++) {
+        if (strcmp(searchName, phonebook[i].name) == 0) {
+            printf("Contact Found:\n");
+            printf("Name: %s\n", phonebook[i].name);
+            printf("Phone: %s\n", phonebook[i].phone);
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Contact not found.\n");
+    }
+}
+
+void displayAllContacts() {
+    if (numContacts == 0) {
+        printf("Phonebook is empty. No contacts to display.\n");
+        return;
+    }
+
+    printf("Phonebook Contacts:\n");
+    for (int i = 0; i < numContacts; i++) {
+        printf("Name: %s\n", phonebook[i].name);
+        printf("Phone: %s\n", phonebook[i].phone);
+        printf("------------------------\n");
+    }
+}
+
+int main() {
+    int choice;
+
+    while (1) {
+        displayMenu();
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addContact();
+                break;
+            case 2:
+                editContact();
+                break;
+            case 3:
+                deleteContact();
+                break;
+            case 4:
+                searchContact();
+                break;
+            case 5:
+                displayAllContacts();
+                break;
+            case 6:
+                printf("Exiting Phonebook. Goodbye!\n");
+                exit(0);
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+
+    return 0;
+}
