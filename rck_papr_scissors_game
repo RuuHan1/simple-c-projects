@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+typedef enum { ROCK, PAPER, SCISSORS } Choice;
+
+Choice getUserChoice() {
+    int choice;
+    printf("Enter your choice (0 - Rock, 1 - Paper, 2 - Scissors): ");
+    scanf("%d", &choice);
+    return (Choice)choice;
+}
+
+Choice getComputerChoice() {
+    srand(time(NULL));
+    return (Choice)(rand() % 3);
+}
+
+void determineWinner(Choice userChoice, Choice computerChoice, int *userScore, int *computerScore) {
+    if (userChoice == computerChoice) {
+        printf("It's a tie!\n");
+    } else if (
+        (userChoice == ROCK && computerChoice == SCISSORS) ||
+        (userChoice == PAPER && computerChoice == ROCK) ||
+        (userChoice == SCISSORS && computerChoice == PAPER)
+    ) {
+        printf("You win this round!\n");
+        (*userScore)++;
+    } else {
+        printf("Computer wins this round!\n");
+        (*computerScore)++;
+    }
+}
+
+int main() {
+    int userScore = 0, computerScore = 0;
+    Choice userChoice, computerChoice;
+
+    while (userScore < 3 && computerScore < 3) {
+        userChoice = getUserChoice();
+        computerChoice = getComputerChoice();
+
+        printf("You chose: %d\n", userChoice);
+        printf("Computer chose: %d\n", computerChoice);
+
+        determineWinner(userChoice, computerChoice, &userScore, &computerScore);
+
+        printf("Current Score - You: %d, Computer: %d\n\n", userScore, computerScore);
+    }
+
+    if (userScore > computerScore) {
+        printf("Congratulations! You won the game!\n");
+    } else {
+        printf("Sorry! Computer won the game!\n");
+    }
+
+    return 0;
+}
